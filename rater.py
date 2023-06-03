@@ -1,56 +1,40 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
 
-def vectorize():
+def train_and_rate(filename):
+    # initializing variables needed to read data from files
     data_array = []
-    results_array = []
+    results_array = [1] * 100 + [0] * 100
+    num_lines = 200
 
-    with open("good_portfolios.txt") as good_data:
-        for line in good_data:
+    # getting training data
+    with open('training_data.txt', 'r') as sample_data:
+        for line in sample_data:
             data_array.append(line)
-            results_array.append(1)
 
-    with open("bad_portfolios.txt") as bad_data:
-        for line in bad_data:
+    # getting new data from user's portfolio        
+    with open(filename, 'r') as new_data:
+        for line in new_data:
             data_array.append(line)
             results_array.append(0)
-    
-    cv = CountVectorizer()
-    vectorized =  cv.fit_transform(data_array)
-
-    X_train, y_train, X_test, y_test = train_test_split(vectorized.toarray(), results_array, train_size=0.7)
-    return X_train, y_train, X_test, y_test
-
-def train_and_test(X_train, y_train, X_test, y_test):
-    highest_acc = -1
-    best_criterion = ""
-    best_depth = 0
-
-    for i in range(2, 6):
-        for criteria in ["entropy", "gini", "log_loss"]:
-            clf = DecisionTreeClassifier(criterion=criteria, max_depth=i)
-            clf.fit(X_train, y_train)
-            acc = accuracy_score(clf.predict(X_test), y_test)
-
-            if acc > highest_acc:
-                highest_acc = acc
-                best_criterion = criteria
-                best_depth = i
-
-    clf = DecisionTreeClassifier(criterion=best_criterion, max_depth=best_depth)
-    return clf
-
-def score_data(clf):
-    score = 0
-    num_lines = 0
-
-    with open("portfolio.txt") as new_data:
-        for line in new_data:
-            score += clf.predict(line)
             num_lines += 1
     
-    out_of_five = (score / num_lines) * 5
+    # vectorizing data
+    cv = CountVectorizer()
+    vectorized = cv.fit_transform(data_array)
+
+    # splitting data into training and test
+    X_train, X_test, y_train, _ = train_test_split(vectorized.toarray(), results_array, train_size=(200 / num_lines))
+
+    # building decision tree classifier with criterion="entropy" and max_depth=5
+    # these paramters were chosen after testing various paramters with test data 
+    clf = DecisionTreeClassifier(criterion="entropy", max_depth=5)
+    clf.fit(X_train, y_train)
     
-    return round(out_of_five, 2)
+    # generate a score out of 5 (rounded to 2 decimal places) for the user's portfolio
+    score = clf.predict(X_test)
+    return round((sum(score) / len(score)) * 5, 2)
+
+if __name__ == "__main__":
+    print(train_and_rate("sampleResume.txt"))
