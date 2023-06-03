@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 
 def train_and_rate(filename):
+    # initializing variables needed to read data from files
     data_array = []
     results_array = [1] * 100 + [0] * 100
     num_lines = 200
