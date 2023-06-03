@@ -1,7 +1,7 @@
 <input type="file" id="fileInput" />
 <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script>
-  const openaiApiKey = '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';
+  const openaiApiKey = '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';
 
   async function parsePdf(dataBuffer) {
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -18,13 +18,14 @@
   }
 
   async function generateResponse(prompt) {
-    const response = await fetch('https://api.openai.com/v1/engines/gpt-3.5-turbo/completions', {
+    const response = await fetch('https://api.openai.com/v1/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${openaiApiKey}`
       },
       body: JSON.stringify({
+        model: "gpt-3.5-turbo",
         prompt: prompt,
         max_tokens: 150,
         n: 1,
@@ -45,6 +46,7 @@
       console.log(pdfText);
 
       const message = `Pretend you are a Google recruiter and provide constructive criticism to the following resume: ${pdfText}`;
+      console.log(message)
       const prompt = [
         { role: "user" , content: message},
       ];
