@@ -125,3 +125,9 @@
     font-size: 30px;
     text-align: center;
 }
+
+.result{
+    font-family: "PT Sans Narrow";
+    color: #ffffff;
+    font-size: 10px;
+}
