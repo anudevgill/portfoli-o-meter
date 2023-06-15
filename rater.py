@@ -2,7 +2,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 
-def train_and_rate(filename):
+def train_and_rate():
     # initializing variables needed to read data from files, including data_array with
     # all the training data
     data_array = ["Accomplished professional with a proven track record of success.",
@@ -233,4 +233,4 @@ def train_and_rate(filename):
     return round((sum(score) / len(score)) * 5, 2)
 
 if __name__ == "__main__":
-    print(train_and_rate("sampleResume.txt"))
+    print(train_and_rate())
